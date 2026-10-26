@@ -1,0 +1,12 @@
+const express = require('express');
+const documents = require('./routes/documents');
+const search = require('./routes/search');
+const { notFoundHandler, errorHandler } = require('./middleware/errorHandler');
+const app = express();
+app.use(express.json({ limit: '1mb' }));
+app.get('/health', (_req, res) => res.status(200).json({ status: 'ok' }));
+app.use('/v1/documents', documents);
+app.use('/v1/search', search);
+app.use(notFoundHandler);
+app.use(errorHandler);
+module.exports = app;
