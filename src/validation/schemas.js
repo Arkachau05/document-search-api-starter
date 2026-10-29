@@ -1,4 +1,6 @@
+// Shared request schemas used by route handlers to enforce the public API contract at runtime.
 const { z } = require('zod');
+// Unknown metadata values are permitted only at the schema boundary; services decide how matching works.
 const ingestDocumentSchema = z.object({
   title: z.string().trim().min(1),
   content: z.string().trim().min(1),

@@ -1,3 +1,4 @@
+// Offline, deterministic embedding implementation used by the starter application and repeatable tests.
 const { EmbeddingProvider } = require('./EmbeddingProvider');
 /** Deterministic local mock; useful for repeatable tests, not a production semantic model. */
 class MockEmbeddingProvider extends EmbeddingProvider {
@@ -6,10 +7,12 @@ class MockEmbeddingProvider extends EmbeddingProvider {
     const vector = Array(this.dimensions).fill(0);
     const tokens = String(text).toLowerCase().match(/[a-z0-9]+/g) || [];
     for (const token of tokens) {
+      // The FNV-style hash places each token consistently in one vector dimension.
       let hash = 2166136261;
       for (let i = 0; i < token.length; i++) { hash ^= token.charCodeAt(i); hash = Math.imul(hash, 16777619); }
       vector[(hash >>> 0) % this.dimensions] += 1;
     }
+    // Normalizing makes cosine similarity compare token proportions rather than document length alone.
     const norm = Math.sqrt(vector.reduce((sum, value) => sum + value * value, 0));
     return norm ? vector.map(value => value / norm) : vector;
   }

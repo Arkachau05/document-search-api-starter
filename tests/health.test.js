@@ -1,3 +1,4 @@
+// Smoke coverage for the process-level health endpoint exposed by the Express application.
 const request = require('supertest');
 const app = require('../src/app');
 test('GET /health returns ok', async () => {

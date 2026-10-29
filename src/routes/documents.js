@@ -1,10 +1,11 @@
+// HTTP endpoints for document ingestion and retrieval; validation and business work are delegated below the route layer.
 const express = require('express');
 const { ingestDocument, getDocument } = require('../services/documentService');
 const { ingestDocumentSchema } = require('../validation/schemas');
 const router = express.Router();
 router.post('/', async (req, res, next) => {
   try {
-    // TODO: map schema validation errors to a safe HTTP 400 response.
+    // Zod trims and validates the body before the service performs storage work.
     const input = ingestDocumentSchema.parse(req.body);
     res.status(201).json(await ingestDocument(input));
   } catch (err) { next(err); }
